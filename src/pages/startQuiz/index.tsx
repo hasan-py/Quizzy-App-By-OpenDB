@@ -9,7 +9,7 @@ function StartQuizPage() {
 
   return (
     <Center bg="gray.50" h="100vh">
-      <Box p={5} m={5} shadow="md" borderRadius="md">
+      <Box w="md" p={5} m={5} shadow="md" borderRadius="md">
         <Heading as="h4" size="md" mb={4} textAlign={"center"}>
           Quizyy 🚀
         </Heading>
@@ -31,7 +31,11 @@ function StartQuizPage() {
         />
 
         <Button
-          onClick={() => navigate("/quizzes")}
+          onClick={() =>
+            navigate("/quizzes", {
+              state: formData,
+            })
+          }
           colorScheme="teal"
           size="md"
           w={"full"}

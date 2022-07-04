@@ -26,23 +26,26 @@ export const useStartQuizController = () => {
   const [formData, setFormData] = useState<formDataInterface>();
   let navigate = useNavigate();
 
-  const setFieldValue = (name: string, value: any) => {
-    const obj: any = {
-      ...formData,
-      [name]: value,
-    };
-
-    setFormData(obj);
-  };
-
-  useEffect(() => {
-    setFieldValue("userName", nameList[random]);
-  }, []);
-
   const { response: categoryData }: any = useAxiosApi({
     method: "get",
     url: "/api_category.php",
   });
+
+  const setFieldValue = (name: string, value: any) => {
+    const obj = (_formData: any) => {
+      return {
+        ..._formData,
+        [name]: value,
+      };
+    };
+
+    setFormData((oldFormData: any) => obj(oldFormData));
+  };
+
+  useEffect(() => {
+    setFieldValue("userName", nameList[random]);
+    setFieldValue("category", categoryData?.trivia_categories[0].id);
+  }, [categoryData?.trivia_categories]);
 
   return {
     categoryData: categoryData?.trivia_categories,
