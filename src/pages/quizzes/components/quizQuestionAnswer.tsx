@@ -8,12 +8,14 @@ import {
   ButtonGroup,
   Button,
   Flex,
+  Progress,
 } from "@chakra-ui/react";
 import {
   ArrowRightIcon,
   ArrowLeftIcon,
   UpDownIcon,
   CheckCircleIcon,
+  RepeatClockIcon,
 } from "@chakra-ui/icons";
 
 function QuizQuestionAnswer({ controller }: any) {
@@ -25,6 +27,9 @@ function QuizQuestionAnswer({ controller }: any) {
     setIsFinished,
     questionData,
     setResponse,
+    refetch,
+    state,
+    setIntoLocalStorage,
   } = controller;
 
   return (
@@ -44,11 +49,17 @@ function QuizQuestionAnswer({ controller }: any) {
           <Box w="md" p={5} m={5} shadow="md" borderRadius="md">
             {singleQuestion ? (
               <>
-                {" "}
-                <Heading as="h5" size="md" mb={2}>
-                  Ques: {questionNo + 1}
+                <Progress
+                  colorScheme="green"
+                  size="xs"
+                  mb={4}
+                  value={(questionNo + 1) * 10}
+                />
+
+                <Heading as="h6" size="md" mb={2}>
+                  Question: {questionNo + 1}
                 </Heading>
-                <Heading as="h5" size="xs" mb={4}>
+                <Heading as="h6" size="xs" mb={4}>
                   {singleQuestion?.question || ""}
                 </Heading>
                 <Stack spacing={5} direction="column">
@@ -135,6 +146,7 @@ function QuizQuestionAnswer({ controller }: any) {
                     <ButtonGroup size="sm" mr={2} isAttached variant="outline">
                       <Button
                         onClick={() => {
+                          setIntoLocalStorage(state?.userName, questionData);
                           setIsFinished(true);
                         }}
                         colorScheme="teal"
@@ -146,7 +158,24 @@ function QuizQuestionAnswer({ controller }: any) {
                   ) : null}
                 </Flex>
               </>
-            ) : null}
+            ) : (
+              <>
+                <Heading as="h6" size="md" mb={2}>
+                  No Question Found, Api Server Error! ⚠️
+                </Heading>
+
+                <Button
+                  onClick={() => {
+                    refetch();
+                  }}
+                  colorScheme="yellow"
+                  size={"sm"}
+                >
+                  Reftch
+                  <RepeatClockIcon ml={2} />
+                </Button>
+              </>
+            )}
           </Box>
         )}
       </Center>

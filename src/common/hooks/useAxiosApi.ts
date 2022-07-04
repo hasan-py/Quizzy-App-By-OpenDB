@@ -9,6 +9,7 @@ interface useAxiosApiInterface {
   method: "head" | "options" | "put" | "post" | "patch" | "delete" | "get";
   body?: any;
   headers?: any;
+  modifyRes?: any;
 }
 
 const useAxiosApi = ({
@@ -16,6 +17,7 @@ const useAxiosApi = ({
   method,
   body = null,
   headers = null,
+  modifyRes,
 }: useAxiosApiInterface) => {
   const [response, setResponse] = useState(null);
   const [error, setError] = useState("");
@@ -23,29 +25,35 @@ const useAxiosApi = ({
   const toast = useToast();
 
   const fetchData = () => {
+    setloading(true);
     axios[method](url, JSON.parse(headers), JSON.parse(body))
       .then((res: any) => {
-        setResponse(res.data);
+        modifyRes ? modifyRes(res?.data, setResponse) : setResponse(res.data);
       })
       .catch((err: any) => {
         toast({
           title: err.message || "Api error occurred!",
           status: "warning",
-          duration: 3000,
+          duration: 2000,
           isClosable: true,
         });
         setError(err);
+        modifyRes({}, setResponse);
       })
       .finally(() => {
         setloading(false);
       });
   };
 
+  const refetch = () => {
+    fetchData();
+  };
+
   useEffect(() => {
     fetchData();
   }, [method, url, body, headers]);
 
-  return { response, error, loading, setResponse };
+  return { response, error, loading, setResponse, refetch };
 };
 
 export default useAxiosApi;

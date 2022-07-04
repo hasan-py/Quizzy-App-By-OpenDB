@@ -6,6 +6,7 @@ interface CustomInputInterface {
   type?: string;
   onChange: Function;
   value: string | number | undefined;
+  onKeyDown?: Function;
 }
 
 function CustomInput({
@@ -14,6 +15,7 @@ function CustomInput({
   label,
   onChange,
   value,
+  onKeyDown,
 }: CustomInputInterface) {
   return (
     <InputGroup mb={4}>
@@ -21,6 +23,7 @@ function CustomInput({
       <Input
         value={value}
         onChange={(e: any) => onChange(e)}
+        onKeyDown={(e: any) => onKeyDown && onKeyDown(e)}
         name={name}
         type={type}
         placeholder={label}

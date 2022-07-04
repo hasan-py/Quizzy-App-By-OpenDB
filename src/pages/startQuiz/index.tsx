@@ -16,6 +16,13 @@ function StartQuizPage() {
           onChange={(e: any) => setFieldValue("userName", e.target.value)}
           name="userName"
           label="User Name"
+          onKeyDown={(e: any) => {
+            if (e.key === "Enter") {
+              navigate("/quizzes", {
+                state: formData,
+              });
+            }
+          }}
           value={formData?.userName}
         />
 
