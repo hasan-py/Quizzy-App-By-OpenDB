@@ -1,11 +1,9 @@
 import { Center, Box, Button, Heading } from "@chakra-ui/react";
 import CustomInput from "@src/common/component/customInput";
-import CustomSelect from "@src/common/component/customSelect";
 import { useStartQuizController } from "./startQuizeController";
 
 function StartQuizPage() {
-  const { setFieldValue, categoryData, formData, navigate } =
-    useStartQuizController();
+  const { setFieldValue, formData, navigate } = useStartQuizController();
 
   return (
     <Center bg="gray.50" h="100vh">
@@ -19,15 +17,6 @@ function StartQuizPage() {
           name="userName"
           label="User Name"
           value={formData?.userName}
-        />
-        <CustomSelect
-          onChange={(e: any) =>
-            setFieldValue("category", Number(e.target.value))
-          }
-          name="category"
-          label="Category"
-          value={formData?.category}
-          options={categoryData}
         />
 
         <Button
