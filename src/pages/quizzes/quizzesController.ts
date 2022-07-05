@@ -1,11 +1,26 @@
 import useAxiosApi from "@src/common/hooks/useAxiosApi";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { totalResult } from "@src/common/function/calculateResult";
+import { useToast } from "@chakra-ui/react";
 
 export const useQuizzesController = () => {
   const { state }: any = useLocation();
   const [isFinished, setIsFinished] = useState(false);
   const navigate = useNavigate();
+  const toast = useToast();
+
+  if (!state?.userName) {
+    navigate("/");
+
+    toast({
+      title: "Please provide a user name",
+      status: "warning",
+      duration: 2000,
+      isClosable: true,
+      id: 123,
+    });
+  }
 
   const {
     response: questionData,
@@ -37,26 +52,20 @@ export const useQuizzesController = () => {
 
   const singleQuestion = questionData?.results[questionNo];
 
-  const totalResult = (data: any) => {
-    const res = data?.reduce((totalResult: number, obj: any) => {
-      if (obj?.user_answer === obj?.correct_answer) {
-        return totalResult + 1;
-      }
-      return totalResult;
-    }, 0);
-
-    return res || 0;
-  };
-
   const setIntoLocalStorage = (name: string, data: any) => {
-    const userNameWiseData = localStorage.getItem(name)
-      ? JSON.parse(localStorage.getItem(name) || "")
-      : [];
+    const quizList: any = localStorage.getItem("@quizList")
+      ? JSON.parse(localStorage.getItem("@quizList") || "")
+      : {};
 
-    userNameWiseData.push(data);
-    localStorage.setItem(name, JSON.stringify(userNameWiseData));
+    if (quizList?.hasOwnProperty(name)) {
+      const arr = quizList[name];
+      arr.push(data);
+      quizList[name] = arr;
+    } else {
+      quizList[name] = [data];
+    }
 
-    console.log(userNameWiseData);
+    localStorage.setItem("@quizList", JSON.stringify(quizList));
   };
 
   return {

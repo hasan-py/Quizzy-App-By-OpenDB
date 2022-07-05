@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 interface formDataInterface {
   userName: string;
@@ -23,6 +23,7 @@ const random = Math.floor(Math.random() * nameList.length);
 export const useStartQuizController = () => {
   const [formData, setFormData] = useState<formDataInterface>();
   let navigate = useNavigate();
+  const { state }: any = useLocation();
 
   const setFieldValue = (name: string, value: any) => {
     const obj = (_formData: any) => {
@@ -36,7 +37,11 @@ export const useStartQuizController = () => {
   };
 
   useEffect(() => {
-    setFieldValue("userName", nameList[random]);
+    if (state?.userName) {
+      setFieldValue("userName", state?.userName);
+    } else {
+      setFieldValue("userName", nameList[random]);
+    }
   }, []);
 
   return {

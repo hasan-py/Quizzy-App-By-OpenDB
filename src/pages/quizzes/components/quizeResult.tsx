@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 
 function QuizeResultList({ controller }: any) {
-  const { questionData, totalResult, navigate } = controller;
+  const { questionData, totalResult, navigate, state } = controller;
 
   return (
     <>
@@ -36,7 +36,9 @@ function QuizeResultList({ controller }: any) {
               fontSize="xs"
               mt={4}
               onClick={() => {
-                navigate("/");
+                navigate("/", {
+                  state,
+                });
               }}
               textDecoration={"underline"}
             >
